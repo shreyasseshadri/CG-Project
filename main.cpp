@@ -1,5 +1,5 @@
 #include<stdlib.h>
-#include <windows.h>
+//#include <windows.h>
 #include<stdio.h>
 #include<math.h>
 #include <GL/glut.h>
@@ -45,21 +45,53 @@ GLfloat colors[][3]={{0.0,0.0,0.0},{1.0,0.0,0.0},{0.0,1.0,0.0},{0.0,0.0,1.0},{0.
 {0.6,0.5,0.5}};
 
 void drawLineBresenham(int x1, int y1, int x2, int y2) {
-    int dx = x2 - x1, dy = abs(y2 - y1);
-    int p = 2 * dy + dx;
-    int x = x1, y = y1;
-    int dec = 2 * dx, inc = 2 * dy;
-    glBegin(GL_POINTS);
-    while (x <= x2) {
-        glVertex2i(x, y);
-        ++x;
-        if (p >= 0) {
-            --y;
-            p -= dec;
-        }
-        p += inc;
+    // int dx = x2 - x1, dy = abs(y2 - y1);
+    // int p = 2 * dy + dx;
+    // int x = x1, y = y1;
+    // int dec = 2 * dx, inc = 2 * dy;
+    // glBegin(GL_POINTS);
+    // while (x <= x2) {
+    //     glVertex2i(x, y);
+    //     ++x;
+    //     if (p >= 0) {
+    //         --y;
+    //         p -= dec;
+    //     }
+    //     p += inc;
+    // }
+    // glEnd();
+	int w = x2 - x1 ;
+    int h = y2 - y1 ;
+    int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0 ;
+    if (w<0) dx1 = -1 ; else if (w>0) dx1 = 1 ;
+    if (h<0) dy1 = -1 ; else if (h>0) dy1 = 1 ;
+    if (w<0) dx2 = -1 ; else if (w>0) dx2 = 1 ;
+    int longest = abs(w) ;
+    int shortest = abs(h) ;
+    if (!(longest>shortest)) {
+        longest = abs(h) ;
+        shortest = abs(w) ;
+        if (h<0) dy2 = -1 ; else if (h>0) dy2 = 1 ;
+        dx2 = 0 ;            
     }
-    glEnd();
+    int numerator = longest >> 1 ;
+    for (int i=0;i<=longest;i++) {
+        // putpixel(x,y,color) ;
+        glBegin(GL_POINTS);
+		glVertex2i(x1,y1);
+
+		numerator += shortest ;
+        if (!(numerator<longest)) {
+            numerator -= longest ;
+            x1 += dx1 ;
+            y1 += dy1 ;
+        } else {
+            x1 += dx2 ;
+            y1 += dy2 ;
+        }
+		
+    }
+	glEnd();
 }
 
 void fillPoly(int n, int v[][2]) {
@@ -103,7 +135,8 @@ void fillPoly(int n, int v[][2]) {
         for (int k = 0; k < j; k += 2) {
             int e1 = activeList[k];
             int e2 = activeList[k + 1];
-            glBegin(GL_LINES);
+            // glColor3i(1,0,0);
+			glBegin(GL_LINES);
             glVertex2i((int) round(edgeTable[e1].x), y);
             glVertex2i((int) round(edgeTable[e2].x), y);
             glEnd();
@@ -281,9 +314,10 @@ void rect(int a,int b,int c,int d)//to draw square/rectangle
             int next=(i+1)%4;
             drawLineBresenham(polyVertices[i][0],polyVertices[i][1],polyVertices[next][0],polyVertices[next][1]);
         }
+		//glBegin(GL_LINE_LOOP);
 
 	}
-        //glBegin(GL_LINE_LOOP);
+        
 
 	/*glVertex2f(xm,ym);
 	glVertex2f(xmm,ym);
@@ -585,21 +619,34 @@ if(btn==GLUT_LEFT_BUTTON && state==GLUT_DOWN)
               yp[1] = y;
 			  glLineWidth(lwd);
               if(y>0.07*wh && x>0.0909*ww)
-			glBegin(GL_LINES);//to display line/edge b/w first two points
+			/*glBegin(GL_LINES);//to display line/edge b/w first two points
 			glVertex2f(xp[0],wh-yp[0]);
 		    glVertex2f(xp[1],wh-yp[1]);
-			glEnd();
+			glEnd();*/
+			drawLineBresenham(xp[0],wh-yp[0],xp[1],wh-yp[1]);
 			break;
 			case(2):
-				if(fill1) glBegin(GL_POLYGON);//to display triangle
+				int polyVertices[][2]={{xp[0],wh-yp[0]},{xp[1],wh-yp[1]},{x,wh-y}};
+				if(fill1)
+						fillPoly(3,polyVertices);
+					//glBegin(GL_POLYGON);//to display triangle
 				else
+				{
 					glLineWidth(lwd);
-					glBegin(GL_LINE_LOOP);
+					//glBegin(GL_LINE_LOOP);
 					if(y>0.07*wh && x>0.0909*ww)
-              		glVertex2f(xp[0],wh-yp[0]);
+					{
+						for(int i=0;i<3;i++)
+						{
+							int next=(i+1)%3;
+							drawLineBresenham(polyVertices[i][0],polyVertices[i][1],polyVertices[next][0],polyVertices[next][1]);
+						}
+					}
+              		/*glVertex2f(xp[0],wh-yp[0]);
 					glVertex2f(xp[1],wh-yp[1]);
 					glVertex2f(x,wh-y);
-					glEnd();
+					glEnd();*/
+				}
 					count1=0;
           }
           break;
@@ -1543,7 +1590,8 @@ void display(void)
 	glVertex2f(ww,wh/16);
 	glVertex2f(0.0688*ww,wh/16);
 	glEnd();
-
+	int polyVertices[][2]={{xm,ym},{xmm,ym},{xmm,ymm},{xm,ymm}};
+	//fillPoly(4,polyVertices);
     icons();
 
 	glColor3f(0.0,0.0,0.0);
