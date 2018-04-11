@@ -1,5 +1,5 @@
 #include<stdlib.h>
-//#include <windows.h>
+#include <windows.h>
 #include<stdio.h>
 #include<math.h>
 #include <GL/glut.h>
@@ -21,7 +21,6 @@ void fill_menu(int);
 int draw(int, int);
 int color(int,int);
 
-
 GLsizei wh = 500, ww = 800; //initial window width and window height
 
 float size=10.0,size1=10.0,e=3.0,f=3.0,g=0.1,lwd=1.0;
@@ -34,10 +33,6 @@ GLfloat xm,ym,xmm,ymm,r=25;
 
 FILE *myimage[1024][1024];
 
-
-
-
-
 static float xp[3],yp[3],theta;//array to store mouse cooordintes and rotation angle
 
 GLfloat colors[][3]={{0.0,0.0,0.0},{1.0,0.0,0.0},{0.0,1.0,0.0},{0.0,0.0,1.0},{0.0,1.0,1.0},
@@ -45,21 +40,6 @@ GLfloat colors[][3]={{0.0,0.0,0.0},{1.0,0.0,0.0},{0.0,1.0,0.0},{0.0,0.0,1.0},{0.
 {0.6,0.5,0.5}};
 
 void drawLineBresenham(int x1, int y1, int x2, int y2) {
-    // int dx = x2 - x1, dy = abs(y2 - y1);
-    // int p = 2 * dy + dx;
-    // int x = x1, y = y1;
-    // int dec = 2 * dx, inc = 2 * dy;
-    // glBegin(GL_POINTS);
-    // while (x <= x2) {
-    //     glVertex2i(x, y);
-    //     ++x;
-    //     if (p >= 0) {
-    //         --y;
-    //         p -= dec;
-    //     }
-    //     p += inc;
-    // }
-    // glEnd();
 	int w = x2 - x1 ;
     int h = y2 - y1 ;
     int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0 ;
@@ -72,14 +52,12 @@ void drawLineBresenham(int x1, int y1, int x2, int y2) {
         longest = abs(h) ;
         shortest = abs(w) ;
         if (h<0) dy2 = -1 ; else if (h>0) dy2 = 1 ;
-        dx2 = 0 ;            
+        dx2 = 0 ;
     }
     int numerator = longest >> 1 ;
     for (int i=0;i<=longest;i++) {
-        // putpixel(x,y,color) ;
         glBegin(GL_POINTS);
 		glVertex2i(x1,y1);
-
 		numerator += shortest ;
         if (!(numerator<longest)) {
             numerator -= longest ;
@@ -89,7 +67,7 @@ void drawLineBresenham(int x1, int y1, int x2, int y2) {
             x1 += dx2 ;
             y1 += dy2 ;
         }
-		
+
     }
 	glEnd();
 }
@@ -163,7 +141,6 @@ void spray(int a,int b,int e)
 	glVertex2f(a+p,b+p);
 	glVertex2f(a+q,b);
 
-
 	glVertex2f(a-o,b-n);
 	glVertex2f(a-n,b-o);
 	glVertex2f(a-p,b-o);
@@ -192,10 +169,10 @@ void spray(int a,int b,int e)
     glVertex2f(a,b-q);
 	if(snake==1)
 	{
-glVertex2f(a+q+5,b+q+5);
-glVertex2f(a+q+5,b-(q+5));
-glVertex2f(a-(q+5),b-q+5);
-glVertex2f(a-(q+5),b+q+5);
+    glVertex2f(a+q+5,b+q+5);
+    glVertex2f(a+q+5,b-(q+5));
+    glVertex2f(a-(q+5),b-q+5);
+    glVertex2f(a-(q+5),b+q+5);
 	}
 
 	glEnd();
@@ -203,17 +180,16 @@ glVertex2f(a-(q+5),b+q+5);
 }
 void colorwin(int x,int y)
 {
-
-
-		   t=color(x,y);
-     b=t;
-	 c=-1;
-
+    t=color(x,y);
+    b=t;
+    c=-1;
+     int ver[][2]={{0.072*ww,wh/15},{ww,wh/15},{0.072*ww,wh/15.022},{0.072*ww,wh}};
 	   glColor3fv(colors[b]);
-	   l=1;//fill on ,'l' variable  is useed to avoid collision with 'fill'
-	   box(0,wh/10,0.039*ww);/*background color indicator*/
-
-					 glBegin(GL_POLYGON);//to change background color
+	   l=1;//fill on ,'l' variable  is used to avoid collision with 'fill'
+	   box(0,wh/10,0.039*ww);//background color indicator
+	   //to change background color
+	   fillPoly(4,ver);
+					/* glBegin(GL_POLYGON);
 					 glVertex2f(ww,wh/15.06);
 					 glVertex2f(0.0725*ww,wh/15.06);
 
@@ -221,12 +197,19 @@ void colorwin(int x,int y)
 					 glVertex2f(ww,wh);
 
 					 glEnd();
-					 glBegin(GL_LINES); /*redraw border*/
-glColor3f(0.0,0.0,0.0);
-      glVertex2f(0.072*ww,wh/15);
+					 glBegin(GL_LINES); */
+					 /*redraw border*/
+        glColor3f(0.0,0.0,0.0);
+
+        for(int i=0;i<3;i++)
+        {
+            int n=(i+1)%4;
+            drawLineBresenham(ver[i][0],ver[i][1],ver[n][0],ver[i][1]);
+        }
+    /*glVertex2f(0.072*ww,wh/15);
        glVertex2f(ww,wh/15);
 	   glVertex2f(0.072*ww,wh/15.022);
-       glVertex2f(0.072*ww,wh);
+       glVertex2f(0.072*ww,wh);*/
       glEnd();
 }
 
@@ -317,7 +300,7 @@ void rect(int a,int b,int c,int d)//to draw square/rectangle
 		//glBegin(GL_LINE_LOOP);
 
 	}
-        
+
 
 	/*glVertex2f(xm,ym);
 	glVertex2f(xmm,ym);
@@ -364,19 +347,21 @@ void mov(int x,int y) /* motion function for pen,lines,rectangle,brush and erase
 		glLogicOp(GL_XOR);
         if(first==1)
 		{
-         glBegin(GL_LINES);
+		    drawLineBresenham(xm,ym,xmm,ymm);
+         /*glBegin(GL_LINES);
 		 glVertex2f(xm,ym);
 		 glVertex2f(xmm,ymm);
-		 glEnd();
+		 glEnd();*/
 		 glFlush();
 		}
 
 	    xmm=x;
 	    ymm=(wh-y);
-	    glBegin(GL_LINES);
+	    /*glBegin(GL_LINES);
 	    glVertex2f(xm,ym);
 	    glVertex2f(xmm,ymm);
-	    glEnd();
+	    glEnd();*/
+	    drawLineBresenham(xm,ym,xmm,ymm);
 	    glFlush();
 	    first=1;
         m=1;
@@ -586,7 +571,7 @@ if(btn==GLUT_LEFT_BUTTON && state==GLUT_DOWN)
 		 c=0;
 	 glPushAttrib(GL_ALL_ATTRIB_BITS);
 
-		pick = draw(x,y);/*To slect draw mode*/
+		pick = draw(x,y);/*To select draw mode*/
 
 
 	     glColor3fv(colors[a]);
@@ -777,13 +762,7 @@ if(btn==GLUT_LEFT_BUTTON && state==GLUT_DOWN)
 			     glDrawPixels(ww,wh,GL_RGB,GL_UNSIGNED_BYTE,myimage);
 			     break;
 				}
-
-
-
-
-
      }
-
 	}
         /*for erasable line and erasable rectangle*/
 	if(btn==GLUT_LEFT_BUTTON && state==GLUT_DOWN)
@@ -898,7 +877,8 @@ void box(int x, int y, int s )
   void right_menu(int id)
 {
 
-   if(id==3) display();
+   if(id==3)
+   {display();icons();}
    if(id==4)
    {
 	   if(snake!=1)
@@ -1089,7 +1069,7 @@ void text()
 		if(h==0)
 		{
 			glColor3fv(colors[a]);
-       glRasterPos2i(0,0.49*wh);
+            glRasterPos2i(0,0.49*wh);
 		}
 	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12,'T');
 	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12,'E');
@@ -1201,16 +1181,17 @@ void icons()
 	if(h==0||h==10)//brush
 	{
 		glColor3f(0.52,0.57,0.53);/*brush*/
-	box(0,0.305*wh,ww/20);
+        box(0,0.305*wh,ww/20);
 	/* display brush symbol*/
-glBegin(GL_POLYGON);
-glColor3fv(colors[a]);
-      glVertex2f(0.0080*ww,0.348*wh);
+//glBegin(GL_POLYGON);
+        glColor3fv(colors[a]);
+        int v[][2]={{0.0080*ww,0.348*wh},{0.043*ww,0.348*wh},{0.043*ww,0.369*wh},{0.0080*ww,0.369*wh}};
+        fillPoly(4,v);
+     /* glVertex2f(0.0080*ww,0.348*wh);
 	  glVertex2f(0.043*ww,0.348*wh);
        glVertex2f(0.043*ww,0.369*wh);
 	   glVertex2f(0.0080*ww,0.369*wh);
       glEnd();
-
            glBegin(GL_LINES);
            glVertex2f(0.0228*ww,0.350*wh);
            glVertex2f(0.0228*ww,0.323*wh);
@@ -1218,27 +1199,39 @@ glColor3fv(colors[a]);
 		   glVertex2f(0.0309*ww,0.323*wh);
 		   glVertex2f(0.0309*ww,0.323*wh);
 		   glVertex2f(0.0309*ww,0.350*wh);
-		   glEnd();
-
+		   glEnd();*/
+        int v1[][2]={{0.0228*ww,0.350*wh},{0.0228*ww,0.323*wh},{0.0228*ww,0.323*wh},{0.0309*ww,0.323*wh},{0.0309*ww,0.323*wh},{0.0309*ww,0.350*wh}};
+        for(int i=0;i<5;i+=2)
+        {
+            drawLineBresenham(v1[i][0],v1[i][1],v1[i+1][0],v1[i+1][1]);
+        }
 	}
       if(h==10)
 	  {
-		   glBegin(GL_POLYGON);
+		   //glBegin(GL_POLYGON);
       glColor3fv(colors[a]);
-      glVertex2f(0.019*ww,wh/18);
+      /*glVertex2f(0.019*ww,wh/18);
 	  glVertex2f(0.053*ww,wh/18);
        glVertex2f(0.053*ww,0.029*wh);
 	   glVertex2f(0.019*ww,0.029*wh);
       glEnd();
-
-           glBegin(GL_LINES);
+    */
+    int v2[][2]={{0.019*ww,wh/18},{0.053*ww,wh/18},{0.053*ww,0.029*wh},{0.019*ww,0.029*wh}};
+    fillPoly(4,v2);
+    int v3[][2]={{0.032*ww,0.032*wh},{0.032*ww,0.015*wh},{0.032*ww,0.015*wh},{0.042*ww,0.015*wh},{0.042*ww,0.015*wh},{0.042*ww,0.032*wh}};
+    for(int i=0;i<5;i+=2)
+    {
+        drawLineBresenham(v3[i][0],v3[i][1],v3[i+1][0],v3[i+1][1]);
+    }
+          /* glBegin(GL_LINES);
            glVertex2f(0.032*ww,0.032*wh);
            glVertex2f(0.032*ww,0.015*wh);
 		   glVertex2f(0.032*ww,0.015*wh);
 		   glVertex2f(0.042*ww,0.015*wh);
 		   glVertex2f(0.042*ww,0.015*wh);
 		   glVertex2f(0.042*ww,0.032*wh);
-		   glEnd();
+		   glEnd();*/
+
 		   glRasterPos2i(6,0.055*wh);
 				  glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12,'B');
 	  glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12,'R');
@@ -1258,19 +1251,24 @@ glColor3fv(colors[a]);
     glColor3f(0.93,0.93,0.93);/*pen*/
 	box(0,0.380*wh,ww/20);
 	/*pen symbol draw*/
-	    glBegin(GL_LINES);
+	    //glBegin(GL_LINES);
 		glColor3f(0.0,0.0,0.0);
-            glVertex2f(0.010*ww,0.422*wh);
+            /*glVertex2f(0.010*ww,0.422*wh);
 		    glVertex2f(0.044*ww,0.452*wh);
 			glVertex2f(0.018*ww,0.418*wh);
 		    glVertex2f(0.048*ww,0.448*wh);
-			glEnd();
+			glEnd();*/
+			int v[][2]={{0.010*ww,0.422*wh},{0.044*ww,0.452*wh},{0.018*ww,0.418*wh},{0.048*ww,0.448*wh}};
+			for(int i=0;i<=2;i+=2)
+                drawLineBresenham(v[i][0],v[i][1],v[i+1][0],v[i+1][1]);
 			glColor3fv(colors[a]);
- glBegin(GL_TRIANGLES);
+ /*glBegin(GL_TRIANGLES);
 		   glVertex2f(0.010*ww,0.422*wh);
            glVertex2f(0.018*ww,0.418*wh);
 		   glVertex2f(0.002*ww,0.410*wh);
-		   glEnd();
+		   glEnd();*/
+		   int v1[][2]={{0.010*ww,0.422*wh},{0.018*ww,0.418*wh},{0.002*ww,0.410*wh}};
+		   fillPoly(3,v1);
 		   glColor3f(0.0,0.0,0.0);
 		   glBegin(GL_POINTS);
 		   glPointSize(e+5.0);
@@ -1280,19 +1278,24 @@ glColor3fv(colors[a]);
 	}
 	if(h!=0&& h==9)
 	{
-		glBegin(GL_LINES);
+		/*glBegin(GL_LINES);
 		glColor3f(0.0,0.0,0.0);
             glVertex2f(0.019*ww,0.029*wh);
 		    glVertex2f(0.053*ww,0.059*wh);
 			glVertex2f(0.025*ww,0.025*wh);
 		    glVertex2f(0.057*ww,0.055*wh);
-			glEnd();
+			glEnd();*/
+			int v[][2]={{0.019*ww,0.029*wh},{0.053*ww,0.059*wh},{0.025*ww,0.025*wh},{0.057*ww,0.055*wh}};
+			for(int i=0;i<=2;i+=2)
+                drawLineBresenham(v[i][0],v[i][1],v[i+1][0],v[i+1][1]);
 			glColor3fv(colors[a]);
- glBegin(GL_TRIANGLES);
+ /*glBegin(GL_TRIANGLES);
 		   glVertex2f(0.019*ww,0.029*wh);
            glVertex2f(0.025*ww,0.025*wh);
 		   glVertex2f(0.0135*ww,0.018*wh);
-		   glEnd();
+		   glEnd();*/
+		   int v1[][2]={{0.019*ww,0.029*wh},{0.025*ww,0.025*wh},{0.0135*ww,0.018*wh}};
+		   fillPoly(3,v1);
 		   glColor3f(0.0,0.0,0.0);
 		   ct=1;
 		    Circle_draw(0.052*ww,0.054*wh,1.85);
@@ -1326,20 +1329,32 @@ glColor3fv(colors[a]);
 
    /*triangle icon*/
 	glColor3fv(colors[a]);
-    glBegin(GL_TRIANGLES);
+    /*glBegin(GL_TRIANGLES);
        glVertex2i(0.008*ww,0.547*wh);
        glVertex2i(0.043*ww,0.547*wh);
 	   glVertex2i(0.023*ww,0.589*wh);
-    glEnd();
+    glEnd();*/
+    int v[][2]={{0.008*ww,0.547*wh},{0.043*ww,0.547*wh},{0.023*ww,0.589*wh}};
+		   fillPoly(3,v);
 	if(h!=0)
 	{
+	    int v1[][2]={{0.008*ww,0.547*wh},{0.043*ww,0.547*wh},{0.023*ww,0.589*wh}};
 		if(fill1)
-	  glBegin(GL_TRIANGLES);
-		else glBegin(GL_LINE_LOOP);
+            fillPoly(3,v1);
+	  //glBegin(GL_TRIANGLES);
+		else
+		{
+		    for(int i=0;i<3;i++)
+            {
+                n=(i+1)%3;
+                drawLineBresenham(v1[i][0],v1[i][1],v1[n][0],v1[n][1]);
+            }
+		}
+            /*glBegin(GL_LINE_LOOP);
       glVertex2i(0.019*ww,0.018*wh);
       glVertex2i(0.051*ww,0.018*wh);
 	  glVertex2i(0.035*ww,0.058*wh);
-     glEnd();
+     glEnd();*/
 	}
      glFlush();
 	}
@@ -1384,17 +1399,19 @@ if(h==0||h==1)//lines
      d=7;
 	else d=a;
 	glColor3fv(colors[d]);
-	glBegin(GL_LINES);
+	/*glBegin(GL_LINES);
        glVertex2i(0.008*ww,0.865*wh);
-       glVertex2i(0.044*ww,0.865*wh);
+       glVertex2i(0.044*ww,0.865*wh);*/
+       drawLineBresenham(0.008*ww,0.865*wh,0.044*ww,0.865*wh);
 	   if(h!=0)
 	   {
 		   glColor3fv(colors[a]);
-      glVertex2f(0.015*ww,0.044*wh);
-	  glVertex2f(0.052*ww,0.044*wh);
+      /*glVertex2f(0.015*ww,0.044*wh);
+	  glVertex2f(0.052*ww,0.044*wh);*/
+        drawLineBresenham(0.015*ww,0.044*wh,0.052*ww,0.044*wh);
 	   }
 
-    glEnd();
+    //glEnd();
 }
 
 if(h==0||h==6)//circle
@@ -1475,34 +1492,32 @@ if(h==0||h==7)//eraser
     l=0;
 		/*object for fill icon*/
  glColor3fv(colors[a]);
-	glBegin(GL_TRIANGLES);
+ int v1[][2]={{0.955*ww,0.01*wh},{0.985*ww,0.01*wh},{0.970*ww,0.04*wh}};
+	/*glBegin(GL_TRIANGLES);
        glVertex2f(0.955*ww,0.01*wh);
        glVertex2f(0.985*ww,0.01*wh);
 	   glVertex2f(0.970*ww,0.04*wh);
-glEnd();
-
-
+glEnd();*/
+    fillPoly(3,v1);
 
 /*object for no fill icon*/
+int v2[][2]={{0.904*ww,0.01*wh},{0.934*ww,0.01*wh},{0.919*ww,0.04*wh}};
     glColor3fv(colors[a]);
-	 glBegin(GL_LINE_LOOP);
+	 /*glBegin(GL_LINE_LOOP);
        glVertex2f(0.904*ww,0.01*wh);
        glVertex2f(0.934*ww,0.01*wh);
 	   glVertex2f(0.919*ww,0.04*wh);
-        glEnd();
-
-	;
+        glEnd();*/
+    for(int i=0;i<3;i++)
+    {
+        int n=(i+1)%3;
+        drawLineBresenham(v2[i][0],v2[i][1],v2[n][0],v2[n][1]);
+    }
     glColor3f(0.5,0.8,0.8);
 	box(0.80*ww,0.0075*wh,ww/25);
 	glColor3f(0.6, 0.7, 0.6);
 	box(0.85*ww,0.0075*wh,ww/25);
-
-
 	/*text for draw modes*/
-
-
-
-
 /*text for increase and decrease icon*/
 	glColor3f(0.0,0.0,0.0);
 	glRasterPos2i(8.07*ww/10,0.0075*wh+7);
@@ -1511,23 +1526,33 @@ glEnd();
 	glRasterPos2i(8.52*ww/10+6,0.02*wh);
 	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, '-');
 /* boundary for color icons*/
-	glBegin(GL_LINE_LOOP);
+	//glBegin(GL_LINE_LOOP);
 glColor3f(0.0,0.0,0.0);
-      glVertex2f(0.099*ww,0);
+      /*glVertex2f(0.099*ww,0);
        glVertex2f(0.099*ww,wh/16.79);
 	   glVertex2f(0.747*ww,wh/16.79);
 	   glVertex2f(0.747*ww,0);
-      glEnd();
+      glEnd();*/
+      int v3[][2]={{0.099*ww,0},{0.099*ww,wh/16.79},{0.747*ww,wh/16.79},{0.747*ww,0}};
+        for(int i=0;i<4;i++)
+    {
+        int n=(i+1)%4;
+        drawLineBresenham(v3[i][0],v3[i][1],v3[n][0],v3[n][1]);
+    }
 	           // end color icon boundary
 
 		/*Drawing boundaries*/
-		glBegin(GL_LINES);
+		/*glBegin(GL_LINES);
         glColor3f(0.0,0.0,0.0);
         glVertex2f(0.072*ww,wh/15);
         glVertex2f(ww,wh/15);
 	    glVertex2f(0.072*ww,wh/15-0.011);
         glVertex2f(0.072*ww,wh);
-        glEnd();//end boundary draw
+        glEnd();*/
+        glColor3f(0.0,0.0,0.0);
+        drawLineBresenham(0.072*ww,wh/15,ww,wh/15);
+        drawLineBresenham(0.072*ww,wh/15-0.011,0.072*ww,wh);
+        //end boundary draw
 }
 glDisable(GL_LINE_SMOOTH);
  glLineWidth(lwd);
@@ -1561,11 +1586,6 @@ if(l==1)//fill=1 to show click effect of an icon
 }
 
 }
-
-
-
-
-
 void display(void)
 {
 
@@ -1590,16 +1610,11 @@ void display(void)
 	glVertex2f(ww,wh/16);
 	glVertex2f(0.0688*ww,wh/16);
 	glEnd();
-	int polyVertices[][2]={{xm,ym},{xmm,ym},{xmm,ymm},{xm,ymm}};
-	//fillPoly(4,polyVertices);
     icons();
 
 	glColor3f(0.0,0.0,0.0);
     glFlush();
-
-
 }
-
 
 int main(int argc, char** argv)
 {
@@ -1627,5 +1642,3 @@ int main(int argc, char** argv)
     glutMainLoop();
     return 0;
 }
-
-

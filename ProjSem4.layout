@@ -2,26 +2,14 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
+	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="18406" topLine="867" />
+		</Cursor>
+	</File>
 	<File name="mypaint.h" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="4073" topLine="0" />
 		</Cursor>
-	</File>
-	<File name="main.cpp" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="4612" topLine="93" />
-		</Cursor>
-		<Folding>
-			<Collapse line="42" />
-			<Collapse line="46" />
-			<Collapse line="64" />
-			<Collapse line="851" />
-			<Collapse line="881" />
-			<Collapse line="1021" />
-			<Collapse line="1027" />
-			<Collapse line="1036" />
-			<Collapse line="1077" />
-			<Collapse line="1489" />
-		</Folding>
 	</File>
 </CodeBlocks_layout_file>

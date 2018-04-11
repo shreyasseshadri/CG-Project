@@ -236,3 +236,12 @@
 	<stddef.h>
 	<GL/gl.h>
 
+1523454220 source:e:\cg\cg-project\main.cpp
+	<stdlib.h>
+	<windows.h>
+	<stdio.h>
+	<math.h>
+	<GL/glut.h>
+	<math.h>
+	<algorithm>
+
